@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Kicukiro District</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: linear-gradient(135deg, #0B5ED7 0%, #198754 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: white;
+            border-radius: 12px;
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        .login-header .logo {
+            font-size: 48px;
+            color: #0B5ED7;
+            background: #F8F9FA;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+        }
+        .login-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #212529;
+        }
+        .login-header p {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 13px;
+            color: #212529;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #DEE2E6;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #0B5ED7;
+        }
+        .form-group .input-icon {
+            position: relative;
+        }
+        .form-group .input-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        .form-group .input-icon input {
+            padding-left: 45px;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: #0B5ED7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-login:hover {
+            background: #0a4fb8;
+        }
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            border-left: 4px solid #dc3545;
+        }
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #6c757d;
+        }
+        .login-footer a {
+            color: #0B5ED7;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo">
+                <i class="fas fa-landmark"></i>
+            </div>
+            <h1>Admin Login</h1>
+            <p>Kicukiro District Activity Management System</p>
+        </div>
+        
+        <% if (error) { %>
+            <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i> <%= error %>
+            </div>
+        <% } %>
+        
+        <form action="/admin/login" method="POST">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Username</label>
+                <div class="input-icon">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="username" placeholder="Enter username" required autofocus>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <div class="input-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" placeholder="Enter password" required>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </form>
+        
+        <div class="login-footer">
+            <a href="/"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
