@@ -85,7 +85,6 @@
         .stat-card.gold { border-left-color: #FFC107; }
         .stat-card.purple { border-left-color: #6f42c1; }
         .stat-card.red { border-left-color: #dc3545; }
-        .stat-card.blue { border-left-color: #0B5ED7; }
         
         .card {
             background: white;
@@ -175,8 +174,6 @@
                 <li><a href="/admin/activities"><i class="fas fa-tasks"></i> Activities</a></li>
                 <li><a href="/admin/departments"><i class="fas fa-building"></i> Departments</a></li>
                 <li><a href="/admin/participants"><i class="fas fa-users"></i> Participants</a></li>
-                <li><a href="/admin/schedule"><i class="fas fa-clock"></i> Schedule</a></li>
-                <li><a href="/admin/announcements"><i class="fas fa-bullhorn"></i> Announcements</a></li>
                 <li><a href="/admin/reports"><i class="fas fa-chart-bar"></i> Reports</a></li>
                 <li><a href="/admin/settings"><i class="fas fa-sliders-h"></i> Settings</a></li>
                 <li style="border-top: 1px solid #343a40; margin-top: 20px; padding-top: 20px;">
@@ -222,15 +219,10 @@
                     <div class="number"><%= activities.filter(a => a.status === 'Upcoming').length %></div>
                     <div class="label">Upcoming</div>
                 </div>
-                <div class="stat-card blue" onclick="location.href='/admin/schedule'">
-                    <div class="icon"><i class="fas fa-clock"></i></div>
-                    <div class="number"><%= scheduleItems.length %></div>
-                    <div class="label">Schedule Items</div>
-                </div>
-                <div class="stat-card gold" onclick="location.href='/admin/announcements'">
-                    <div class="icon"><i class="fas fa-bullhorn"></i></div>
-                    <div class="number"><%= announcements.length %></div>
-                    <div class="label">Announcements</div>
+                <div class="stat-card red" onclick="location.href='/admin/activities'">
+                    <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="number"><%= activities.filter(a => a.status === 'Cancelled').length %></div>
+                    <div class="label">Cancelled</div>
                 </div>
             </div>
             
@@ -265,35 +257,37 @@
                         <a href="/admin/activity/add" class="btn btn-primary" style="text-decoration: none; text-align: center;">
                             <i class="fas fa-plus"></i> Add New Activity
                         </a>
-                        <a href="/admin/schedule/add" class="btn btn-success" style="text-decoration: none; text-align: center;">
-                            <i class="fas fa-clock"></i> Add Schedule Item
-                        </a>
-                        <a href="/admin/announcement/add" class="btn btn-warning" style="text-decoration: none; text-align: center;">
-                            <i class="fas fa-bullhorn"></i> Add Announcement
-                        </a>
                         <a href="/admin/reports" class="btn btn-secondary" style="text-decoration: none; text-align: center;">
                             <i class="fas fa-file-alt"></i> Generate Report
+                        </a>
+                        <a href="/admin/participants" class="btn btn-success" style="text-decoration: none; text-align: center;">
+                            <i class="fas fa-user-plus"></i> Register Participant
+                        </a>
+                        <a href="#" class="btn btn-warning" style="text-decoration: none; text-align: center;">
+                            <i class="fas fa-database"></i> Backup Database
                         </a>
                     </div>
                 </div>
             </div>
             
             <div class="card mt-20">
-                <h3><i class="fas fa-clock"></i> Today's Schedule</h3>
+                <h3><i class="fas fa-building"></i> Departments Overview</h3>
                 <table>
                     <thead>
                         <tr>
-                            <th>Time</th>
-                            <th>Title</th>
-                            <th>Details</th>
+                            <th>Department</th>
+                            <th>Head</th>
+                            <th>Staff</th>
+                            <th>Activities</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% scheduleItems.slice(0, 5).forEach(s => { %>
-                            <tr onclick="location.href='/admin/schedule'">
-                                <td><strong><%= s.time %></strong></td>
-                                <td><%= s.title %></td>
-                                <td><%= s.meta %></td>
+                        <% departments.forEach(d => { %>
+                            <tr onclick="location.href='/admin/departments'">
+                                <td><%= d.name %></td>
+                                <td><%= d.head %></td>
+                                <td><%= d.staff %></td>
+                                <td><%= activities.filter(a => a.department === d.name).length %></td>
                             </tr>
                         <% }); %>
                     </tbody>

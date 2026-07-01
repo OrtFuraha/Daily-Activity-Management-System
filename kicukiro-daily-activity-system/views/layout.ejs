@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kicukiro District Daily Activity Management System</title>
+    <title><%= title || 'Kicukiro District Daily Activity Management System' %></title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -76,6 +76,144 @@
         .nav ul li a:hover { background: #F8F9FA; }
         .nav ul li a i { margin-right: 8px; }
         .nav ul li a.active { color: #0B5ED7; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            border-left: 4px solid #0B5ED7;
+        }
+        .stat-card .stat-icon { font-size: 28px; margin-bottom: 8px; }
+        .stat-card .stat-number { font-size: 28px; font-weight: 600; }
+        .stat-card .stat-label { font-size: 13px; color: #6c757d; }
+        .stat-card.completed { border-left-color: #198754; }
+        .stat-card.completed .stat-icon { color: #198754; }
+        .stat-card.pending { border-left-color: #FFC107; }
+        .stat-card.pending .stat-icon { color: #FFC107; }
+        .stat-card.ongoing { border-left-color: #0B5ED7; }
+        .stat-card.ongoing .stat-icon { color: #0B5ED7; }
+        .stat-card.upcoming { border-left-color: #6f42c1; }
+        .stat-card.upcoming .stat-icon { color: #6f42c1; }
+        .stat-card.green { border-left-color: #198754; }
+        .stat-card.gold { border-left-color: #FFC107; }
+        .stat-card.blue { border-left-color: #0B5ED7; }
+        .stat-card.purple { border-left-color: #6f42c1; }
+        .stat-card.red { border-left-color: #dc3545; }
+        
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 25px 0;
+        }
+        .activity-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 4px solid #DEE2E6;
+            position: relative;
+        }
+        .activity-card.status-completed { border-left-color: #198754; }
+        .activity-card.status-in-progress { border-left-color: #0B5ED7; }
+        .activity-card.status-pending { border-left-color: #FFC107; }
+        .activity-card.status-upcoming { border-left-color: #6f42c1; }
+        .activity-card.status-cancelled { border-left-color: #dc3545; }
+        
+        .activity-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+        .activity-card .card-title { 
+            font-size: 16px; 
+            font-weight: 600; 
+            margin: 0;
+        }
+        .activity-card .card-number { 
+            font-size: 12px; 
+            color: #6c757d;
+            font-weight: 400;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .badge-status {
+            background: #e9ecef;
+            color: #212529;
+        }
+        .badge-status.completed { background: #d4edda; color: #155724; }
+        .badge-status.in-progress { background: #cce5ff; color: #004085; }
+        .badge-status.pending { background: #fff3cd; color: #856404; }
+        .badge-status.upcoming { background: #e8d4f0; color: #4a0e6b; }
+        .badge-status.cancelled { background: #f8d7da; color: #721c24; }
+        
+        .badge-priority {
+            background: #ffc107;
+            color: #212529;
+        }
+        .badge-priority.high { background: #dc3545; color: white; }
+        .badge-priority.medium { background: #ffc107; color: #212529; }
+        .badge-priority.low { background: #28a745; color: white; }
+        
+        .activity-card .card-details {
+            font-size: 13px;
+            color: #495057;
+            margin: 10px 0;
+        }
+        .activity-card .card-details i {
+            width: 20px;
+            color: #6c757d;
+        }
+        .activity-card .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        .activity-card .progress-bar .fill {
+            height: 100%;
+            background: #0B5ED7;
+            border-radius: 3px;
+        }
+        .activity-card .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .activity-card .card-actions button,
+        .activity-card .card-actions a {
+            padding: 5px 12px;
+            border: 1px solid #DEE2E6;
+            background: white;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #212529;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .activity-card .card-actions button:hover,
+        .activity-card .card-actions a:hover {
+            background: #F8F9FA;
+        }
         
         .timeline {
             position: relative;
@@ -239,14 +377,23 @@
         }
         .btn-primary { background: #0B5ED7; color: white; }
         .btn-primary:hover { background: #0a4fb8; }
+        .btn-success { background: #198754; color: white; }
+        .btn-success:hover { background: #157347; }
+        .btn-warning { background: #FFC107; color: #212529; }
+        .btn-warning:hover { background: #e0a800; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-danger:hover { background: #c82333; }
         .btn-secondary { background: #6c757d; color: white; }
         .btn-secondary:hover { background: #5a6268; }
         
         @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .activity-grid { grid-template-columns: 1fr; }
             .header-content { flex-direction: column; text-align: center; }
             .header-right { text-align: center; margin-top: 10px; }
         }
         @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
             .nav ul { flex-direction: column; gap: 5px; }
         }
         
@@ -291,113 +438,16 @@
         <div class="container">
             <ul>
                 <li><a href="/" class="active"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="/activities"><i class="fas fa-tasks"></i> Activities</a></li>
-                <li><a href="#schedule"><i class="fas fa-clock"></i> Schedule</a></li>
-                <li><a href="#announcements"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+                <li><a href="/#activities"><i class="fas fa-tasks"></i> Activities</a></li>
+                <li><a href="/#schedule"><i class="fas fa-clock"></i> Schedule</a></li>
+                <li><a href="/#announcements"><i class="fas fa-bullhorn"></i> Announcements</a></li>
                 <li><a href="/admin/login"><i class="fas fa-cog"></i> Admin Panel</a></li>
             </ul>
         </div>
     </nav>
     
     <main class="container">
-        <!-- Hero Banner -->
-        <section style="background: linear-gradient(to right, #0B5ED7, #198754); padding: 30px 40px; border-radius: 8px; margin: 20px 0; color: white;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                <div>
-                    <h1 style="font-size: 32px; font-weight: 700; margin: 0;">Welcome to Kicukiro District</h1>
-                    <p style="font-size: 18px; opacity: 0.9; margin: 5px 0 0;">Daily Activity Management System</p>
-                </div>
-                <div style="display: flex; gap: 15px; align-items: center;">
-                    <a href="/activities" style="background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 4px; color: white; text-decoration: none; transition: background 0.3s;">
-                        <i class="fas fa-calendar-day"></i> Today's Activities: <%= activities.length %>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Search Section -->
-        <div class="search-box">
-            <i class="fas fa-search" style="color: #6c757d; align-self: center;"></i>
-            <input type="text" placeholder="Search activities..." id="searchInput" onkeyup="searchActivities()">
-            <button><i class="fas fa-search"></i> Search</button>
-        </div>
-
-        <!-- Daily Schedule Timeline -->
-        <section id="schedule" style="margin: 40px 0;">
-            <div class="section-header">
-                <h2><i class="fas fa-clock"></i> Daily Schedule Timeline</h2>
-                <div class="subtitle">Today's Activities by Time</div>
-            </div>
-            
-            <div class="timeline">
-                <% scheduleItems.forEach(item => { %>
-                    <div class="timeline-item">
-                        <div class="time"><%= item.time %></div>
-                        <div class="title"><%= item.title %></div>
-                        <div class="meta"><%= item.meta %></div>
-                    </div>
-                <% }); %>
-            </div>
-        </section>
-
-        <!-- Announcements -->
-        <section id="announcements">
-            <div class="section-header">
-                <h2><i class="fas fa-bullhorn"></i> Recent Announcements</h2>
-                <div class="subtitle">Stay informed about district news and updates</div>
-            </div>
-            
-            <div class="announcements">
-                <% announcements.forEach(ann => { %>
-                    <div class="announcement-item">
-                        <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap;">
-                            <div>
-                                <div class="title"><%= ann.title %></div>
-                                <div class="content"><%= ann.content %></div>
-                            </div>
-                            <div style="text-align: right;">
-                                <span class="type type-<%= ann.type.toLowerCase() %>"><%= ann.type %></span>
-                                <div style="font-size: 12px; color: #6c757d; margin-top: 5px;"><%= ann.date %></div>
-                            </div>
-                        </div>
-                    </div>
-                <% }); %>
-            </div>
-        </section>
-
-        <!-- District Information -->
-        <section style="margin: 40px 0;">
-            <div class="section-header">
-                <h2><i class="fas fa-info-circle"></i> District Information</h2>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-                <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.06);">
-                    <h4><i class="fas fa-user-tie"></i> District Executive Administrator</h4>
-                    <p style="font-weight: 500; font-size: 15px;">MUTSINZI Antoine</p>
-                    <p style="font-size: 13px; color: #6c757d;">District Executive Administrator</p>
-                </div>
-                <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.06);">
-                    <h4><i class="fas fa-user-tie"></i> Deputy District Executive Administrator</h4>
-                    <p style="font-weight: 500; font-size: 15px;">Monique Huss</p>
-                    <p style="font-size: 13px; color: #6c757d;">Deputy District Executive Administrator</p>
-                </div>
-                <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.06);">
-                    <h4><i class="fas fa-user-tie"></i> Division Manager & Corporate Services</h4>
-                    <p style="font-weight: 500; font-size: 15px;">MURENZI M. Donatien</p>
-                    <p style="font-size: 13px; color: #6c757d;">Division Manager and Corporates Services</p>
-                </div>
-            </div>
-        </section>
-
-        <script>
-        function searchActivities() {
-            const input = document.getElementById('searchInput').value.toLowerCase();
-            if (input.length > 0) {
-                window.location.href = '/activities';
-            }
-        }
-        </script>
+        <%- body %>
     </main>
     
     <footer class="footer">
@@ -413,8 +463,8 @@
                 <div>
                     <h4>Quick Links</h4>
                     <p><a href="/">Home</a></p>
-                    <p><a href="/activities">Activities</a></p>
-                    <p><a href="#announcements">Announcements</a></p>
+                    <p><a href="/#activities">Activities</a></p>
+                    <p><a href="/#announcements">Announcements</a></p>
                     <p><a href="/admin/login">Admin Panel</a></p>
                 </div>
                 <div>

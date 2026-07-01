@@ -38,6 +38,7 @@
             text-decoration: none;
             font-size: 14px;
             border-left: 3px solid transparent;
+            transition: all 0.2s;
         }
         .sidebar ul li a:hover { background: #343a40; color: white; }
         .sidebar ul li a.active {
@@ -92,7 +93,7 @@
             border-color: #0B5ED7;
             box-shadow: 0 0 0 3px rgba(11, 94, 215, 0.1);
         }
-        .form-group textarea { min-height: 100px; }
+        .form-group textarea { min-height: 100px; resize: vertical; }
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -114,8 +115,12 @@
         }
         .btn-primary { background: #0B5ED7; color: white; }
         .btn-primary:hover { background: #0a4fb8; }
+        .btn-success { background: #198754; color: white; }
+        .btn-success:hover { background: #157347; }
         .btn-secondary { background: #6c757d; color: white; }
         .btn-secondary:hover { background: #5a6268; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-danger:hover { background: #c82333; }
         
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
         .gap-10 { gap: 10px; }
@@ -137,8 +142,6 @@
                 <li><a href="/admin/activities" class="active"><i class="fas fa-tasks"></i> Activities</a></li>
                 <li><a href="/admin/departments"><i class="fas fa-building"></i> Departments</a></li>
                 <li><a href="/admin/participants"><i class="fas fa-users"></i> Participants</a></li>
-                <li><a href="/admin/schedule"><i class="fas fa-clock"></i> Schedule</a></li>
-                <li><a href="/admin/announcements"><i class="fas fa-bullhorn"></i> Announcements</a></li>
                 <li><a href="/admin/reports"><i class="fas fa-chart-bar"></i> Reports</a></li>
                 <li><a href="/admin/settings"><i class="fas fa-sliders-h"></i> Settings</a></li>
                 <li style="border-top: 1px solid #343a40; margin-top: 20px; padding-top: 20px;">
@@ -165,11 +168,33 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Activity Title *</label>
-                            <input type="text" name="title" value="<%= activity ? activity.title : '' %>" placeholder="Enter activity title" required>
+                            <input type="text" name="title" value="<%= activity ? activity.title : '' %>" required>
                         </div>
                         <div class="form-group">
                             <label>Activity Number</label>
-                            <input type="text" name="activityNumber" value="<%= activity ? activity.activityNumber : 'KDA-2026-00' + (activities ? activities.length + 1 : 1) %>" readonly style="background: #e9ecef;">
+                            <input type="text" name="activityNumber" value="<%= activity ? activity.activityNumber : 'KDA-2026-00' + (activities ? activities.length + 1 : 1) %>">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select name="category" required>
+                                <option value="Meeting" <%= activity && activity.category === 'Meeting' ? 'selected' : '' %>>Meeting</option>
+                                <option value="Inspection" <%= activity && activity.category === 'Inspection' ? 'selected' : '' %>>Inspection</option>
+                                <option value="Community Work" <%= activity && activity.category === 'Community Work' ? 'selected' : '' %>>Community Work</option>
+                                <option value="Training" <%= activity && activity.category === 'Training' ? 'selected' : '' %>>Training</option>
+                                <option value="Health" <%= activity && activity.category === 'Health' ? 'selected' : '' %>>Health</option>
+                                <option value="Other" <%= activity && activity.category === 'Other' ? 'selected' : '' %>>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Department *</label>
+                            <select name="department" required>
+                                <% departments.forEach(d => { %>
+                                    <option value="<%= d.name %>" <%= activity && activity.department === d.name ? 'selected' : '' %>><%= d.name %></option>
+                                <% }); %>
+                            </select>
                         </div>
                     </div>
                     
@@ -179,36 +204,73 @@
                             <input type="date" name="date" value="<%= activity ? activity.date : new Date().toISOString().split('T')[0] %>" required>
                         </div>
                         <div class="form-group">
-                            <label>Start Time *</label>
-                            <input type="time" name="startTime" value="<%= activity ? activity.startTime : '08:00' %>" required>
+                            <label>Coordinator *</label>
+                            <input type="text" name="coordinator" value="<%= activity ? activity.coordinator : '' %>" required>
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label>End Time *</label>
-                            <input type="time" name="endTime" value="<%= activity ? activity.endTime : '17:00' %>" required>
+                            <label>Start Time *</label>
+                            <input type="time" name="startTime" value="<%= activity ? activity.startTime : '08:00' %>" required>
                         </div>
                         <div class="form-group">
-                            <label>Activity Name *</label>
-                            <input type="text" name="category" value="<%= activity ? activity.category : '' %>" placeholder="e.g., Meeting, Inspection, Training" required>
+                            <label>End Time *</label>
+                            <input type="time" name="endTime" value="<%= activity ? activity.endTime : '17:00' %>" required>
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label>Location *</label>
-                            <input type="text" name="location" value="<%= activity ? activity.location : '' %>" placeholder="Enter location" required>
+                            <input type="text" name="location" value="<%= activity ? activity.location : '' %>" required>
                         </div>
                         <div class="form-group">
-                            <label>Participants</label>
-                            <input type="text" name="participants" value="<%= activity ? activity.participants : '' %>" placeholder="Enter names or number of participants">
+                            <label>Sector</label>
+                            <input type="text" name="sector" value="<%= activity ? activity.sector : '' %>">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Status *</label>
+                            <select name="status" required>
+                                <option value="Pending" <%= activity && activity.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                                <option value="In Progress" <%= activity && activity.status === 'In Progress' ? 'selected' : '' %>>In Progress</option>
+                                <option value="Completed" <%= activity && activity.status === 'Completed' ? 'selected' : '' %>>Completed</option>
+                                <option value="Cancelled" <%= activity && activity.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                <option value="Upcoming" <%= activity && activity.status === 'Upcoming' ? 'selected' : '' %>>Upcoming</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Priority *</label>
+                            <select name="priority" required>
+                                <option value="Low" <%= activity && activity.priority === 'Low' ? 'selected' : '' %>>Low</option>
+                                <option value="Medium" <%= activity && activity.priority === 'Medium' ? 'selected' : '' %>>Medium</option>
+                                <option value="High" <%= activity && activity.priority === 'High' ? 'selected' : '' %>>High</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Expected Attendance</label>
+                            <input type="number" name="expectedAttendance" value="<%= activity ? activity.expectedAttendance : '' %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Budget</label>
+                            <input type="text" name="budget" value="<%= activity ? activity.budget : '' %>" placeholder="e.g., 1,000,000 RWF">
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea name="description" placeholder="Enter activity description"><%= activity ? activity.description : '' %></textarea>
+                        <textarea name="description"><%= activity ? activity.description : '' %></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Resources Required</label>
+                        <input type="text" name="resources" value="<%= activity ? activity.resources : '' %>" placeholder="e.g., Projectors, Vehicles, Documents">
                     </div>
                     
                     <div class="flex-between mt-20">

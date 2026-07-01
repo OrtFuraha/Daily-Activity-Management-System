@@ -1,0 +1,6 @@
+/* Additional custom styles */
+.border-left-completed { border-left-color: #198754 !important; }
+.border-left-in-progress { border-left-color: #0B5ED7 !important; }
+.border-left-pending { border-left-color: #FFC107 !important; }
+.border-left-upcoming { border-left-color: #6f42c1 !important; }
+.border-left-cancelled { border-left-color: #dc3545 !important; }

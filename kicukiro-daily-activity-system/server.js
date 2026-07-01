@@ -2,12 +2,9 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
 const PORT = 1110;
-
-console.log('🚀 Starting Kicukiro District Activity Management System...');
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -24,8 +21,6 @@ app.use(session({
   cookie: { secure: false, maxAge: 3600000 }
 }));
 
-console.log('✅ Middleware configured');
-
 // Sample data - These are shared between admin and homepage
 let activities = [
   {
@@ -33,7 +28,7 @@ let activities = [
     activityNumber: 'KDA-2026-001',
     title: 'Community Development Meeting',
     category: 'Meeting',
-    date: '2026-06-30',
+    date: '2026-06-29',
     startTime: '07:00',
     endTime: '09:00',
     location: 'Kicukiro District Office',
@@ -43,7 +38,7 @@ let activities = [
     department: 'Community Development',
     status: 'Completed',
     priority: 'High',
-    participants: '45',
+    participants: 45,
     expectedAttendance: 50,
     actualAttendance: 45,
     description: 'Monthly community development meeting focusing on infrastructure projects.',
@@ -51,14 +46,14 @@ let activities = [
     budget: '2,500,000 RWF',
     progress: 100,
     createdAt: '2026-06-20',
-    updatedAt: '2026-06-30'
+    updatedAt: '2026-06-29'
   },
   {
     id: 2,
     activityNumber: 'KDA-2026-002',
     title: 'Infrastructure Inspection',
     category: 'Inspection',
-    date: '2026-06-30',
+    date: '2026-06-29',
     startTime: '09:00',
     endTime: '12:00',
     location: 'Various Sites',
@@ -68,7 +63,7 @@ let activities = [
     department: 'Infrastructure',
     status: 'In Progress',
     priority: 'High',
-    participants: '12',
+    participants: 12,
     expectedAttendance: 15,
     actualAttendance: 12,
     description: 'Inspection of ongoing road construction projects in the district.',
@@ -76,54 +71,139 @@ let activities = [
     budget: '1,800,000 RWF',
     progress: 65,
     createdAt: '2026-06-28',
-    updatedAt: '2026-06-30'
+    updatedAt: '2026-06-29'
+  },
+  {
+    id: 3,
+    activityNumber: 'KDA-2026-003',
+    title: 'Community Work - Umuganda',
+    category: 'Community Work',
+    date: '2026-06-29',
+    startTime: '11:00',
+    endTime: '14:00',
+    location: 'Various Locations',
+    sector: 'Nyarugunga',
+    cell: 'Nyarugunga B',
+    coordinator: 'Emmanuel Niyonzima',
+    department: 'Social Affairs',
+    status: 'Pending',
+    priority: 'High',
+    participants: 200,
+    expectedAttendance: 250,
+    actualAttendance: 0,
+    description: 'Monthly community work (Umuganda) for environmental cleanliness.',
+    resources: 'Cleaning tools, Waste collection bags',
+    budget: '500,000 RWF',
+    progress: 0,
+    createdAt: '2026-06-25',
+    updatedAt: '2026-06-29'
+  },
+  {
+    id: 4,
+    activityNumber: 'KDA-2026-004',
+    title: 'Youth Entrepreneurship Training',
+    category: 'Training',
+    date: '2026-06-29',
+    startTime: '14:00',
+    endTime: '16:00',
+    location: 'Youth Center',
+    sector: 'Kicukiro',
+    cell: 'Kicukiro B',
+    coordinator: 'Alice Mukamana',
+    department: 'Youth Development',
+    status: 'Upcoming',
+    priority: 'Medium',
+    participants: 0,
+    expectedAttendance: 30,
+    actualAttendance: 0,
+    description: 'Training session on entrepreneurship and business skills for youth.',
+    resources: 'Training materials, Projectors, Computers',
+    budget: '1,200,000 RWF',
+    progress: 0,
+    createdAt: '2026-06-27',
+    updatedAt: '2026-06-29'
+  },
+  {
+    id: 5,
+    activityNumber: 'KDA-2026-005',
+    title: 'Closing Coordination Meeting',
+    category: 'Meeting',
+    date: '2026-06-29',
+    startTime: '16:00',
+    endTime: '17:30',
+    location: 'Kicukiro District Office',
+    sector: 'Kicukiro',
+    cell: 'Kicukiro Central',
+    coordinator: 'Dr. Jean Paul Rwema',
+    department: 'Administration',
+    status: 'Cancelled',
+    priority: 'Low',
+    participants: 25,
+    expectedAttendance: 30,
+    actualAttendance: 0,
+    description: 'Final coordination meeting for the month of June 2026.',
+    resources: 'Conference room, Refreshments',
+    budget: '350,000 RWF',
+    progress: 0,
+    createdAt: '2026-06-26',
+    updatedAt: '2026-06-29'
+  },
+  {
+    id: 6,
+    activityNumber: 'KDA-2026-006',
+    title: 'Health Sensitization Campaign',
+    category: 'Health',
+    date: '2026-06-30',
+    startTime: '08:00',
+    endTime: '12:00',
+    location: 'Health Center',
+    sector: 'Masaka',
+    cell: 'Masaka A',
+    coordinator: 'Dr. Rose Uwimana',
+    department: 'Health',
+    status: 'Upcoming',
+    priority: 'High',
+    participants: 0,
+    expectedAttendance: 100,
+    actualAttendance: 0,
+    description: 'Health sensitization on malaria prevention and hygiene practices.',
+    resources: 'Medical supplies, Educational materials',
+    budget: '750,000 RWF',
+    progress: 0,
+    createdAt: '2026-06-28',
+    updatedAt: '2026-06-29'
   }
 ];
 
 let departments = [
   { id: 1, name: 'Administration', head: 'Dr. Jean Paul Rwema', staff: 25 },
   { id: 2, name: 'Community Development', head: 'Jean Pierre Habimana', staff: 30 },
-  { id: 3, name: 'Infrastructure', head: 'Marie Claire Uwimana', staff: 20 }
+  { id: 3, name: 'Infrastructure', head: 'Marie Claire Uwimana', staff: 20 },
+  { id: 4, name: 'Social Affairs', head: 'Emmanuel Niyonzima', staff: 15 },
+  { id: 5, name: 'Youth Development', head: 'Alice Mukamana', staff: 18 },
+  { id: 6, name: 'Health', head: 'Dr. Rose Uwimana', staff: 22 }
 ];
 
 let announcements = [
   { id: 1, title: 'Important Notice: Umuganda Day', content: 'All residents are reminded to participate in Umuganda this Saturday.', type: 'Important', date: '2026-06-28' },
-  { id: 2, title: 'District Development Plan', content: 'The new development plan for Kicukiro District has been approved.', type: 'News', date: '2026-06-29' }
+  { id: 2, title: 'District Development Plan', content: 'The new development plan for Kicukiro District has been approved.', type: 'News', date: '2026-06-27' },
+  { id: 3, title: 'Emergency: Weather Alert', content: 'Heavy rains expected. Please take necessary precautions.', type: 'Emergency', date: '2026-06-29' }
 ];
 
 let participants = [
-  { id: 1, name: 'Jean Paul Niyonzima', institution: 'Kicukiro Sector', position: 'Sector Executive', phone: '+250 788 123 456', email: 'jp.niyoni@gmail.com', gender: 'Male' }
+  { id: 1, name: 'Jean Paul Niyonzima', institution: 'Kicukiro Sector', position: 'Sector Executive', phone: '+250 788 123 456', email: 'jp.niyoni@gmail.com', gender: 'Male' },
+  { id: 2, name: 'Marie Claire Uwimana', institution: 'District Office', position: 'Infrastructure Director', phone: '+250 788 234 567', email: 'mc.uwimana@kicukiro.gov.rw', gender: 'Female' },
+  { id: 3, name: 'Emmanuel Habimana', institution: 'Youth Center', position: 'Youth Coordinator', phone: '+250 788 345 678', email: 'emmanuel.habimana@gmail.com', gender: 'Male' },
+  { id: 4, name: 'Alice Mukamana', institution: 'Health Center', position: 'Health Officer', phone: '+250 788 456 789', email: 'alice.mukamana@health.gov.rw', gender: 'Female' },
+  { id: 5, name: 'Jean Pierre Rwema', institution: 'District Administration', position: 'Administrative Officer', phone: '+250 788 567 890', email: 'jp.rwema@kicukiro.gov.rw', gender: 'Male' }
 ];
-
-// Schedule Timeline Data
-let scheduleItems = [
-  { id: 1, time: '07:00', title: 'Community Development Meeting', meta: 'Kicukiro District Office | 45 participants' },
-  { id: 2, time: '09:00', title: 'Infrastructure Inspection', meta: 'Various Sites | 12 participants' },
-  { id: 3, time: '11:00', title: 'Community Work - Umuganda', meta: 'Various Locations | 200 participants' },
-  { id: 4, time: '14:00', title: 'Youth Entrepreneurship Training', meta: 'Youth Center | 30 participants expected' },
-  { id: 5, time: '16:00', title: 'Closing Coordination Meeting', meta: 'Kicukiro District Office | Cancelled' }
-];
-
-// Settings storage
-let settings = {
-  districtName: 'Kicukiro District',
-  systemName: 'Daily Activity Management System',
-  themeColor: '#0B5ED7',
-  emailServer: 'smtp.gmail.com',
-  emailAddress: 'info@kicukiro.gov.rw',
-  twoFactorAuth: 'Enabled',
-  sessionTimeout: 30,
-  profileName: 'Administrator',
-  profileEmail: 'admin@kicukiro.gov.rw',
-  profilePhone: '+250 788 123 456'
-};
 
 // Users for login
 const users = [
-  { username: 'admin', password: 'admin123', role: 'Administrator' }
+  { username: 'admin', password: 'admin123', role: 'Administrator' },
+  { username: 'manager', password: 'manager123', role: 'District Manager' },
+  { username: 'staff', password: 'staff123', role: 'Staff' }
 ];
-
-console.log('✅ Data initialized');
 
 // Auth middleware
 function isAuthenticated(req, res, next) {
@@ -134,8 +214,7 @@ function isAuthenticated(req, res, next) {
   }
 }
 
-// ==================== PUBLIC ROUTES ====================
-// Home Page
+// Routes
 app.get('/', (req, res) => {
   const today = new Date().toISOString().split('T')[0];
   const todayActivities = activities.filter(a => a.date === today);
@@ -146,7 +225,7 @@ app.get('/', (req, res) => {
     ongoing: activities.filter(a => a.status === 'In Progress').length,
     upcoming: activities.filter(a => a.status === 'Upcoming').length,
     departments: departments.length,
-    totalParticipants: activities.reduce((sum, a) => sum + (typeof a.participants === 'number' ? a.participants : 0), 0),
+    totalParticipants: activities.reduce((sum, a) => sum + a.participants, 0),
     totalLocations: new Set(activities.map(a => a.location)).size,
     totalVehicles: 7,
     emergency: 1
@@ -158,25 +237,10 @@ app.get('/', (req, res) => {
     stats, 
     announcements, 
     departments,
-    scheduleItems: scheduleItems,
-    session: req.session,
-    settings: settings
-  });
-});
-
-// Activities Page
-app.get('/activities', (req, res) => {
-  const today = new Date().toISOString().split('T')[0];
-  const todayActivities = activities.filter(a => a.date === today);
-  
-  res.render('activities', { 
-    title: 'Today\'s Activities - Kicukiro District',
-    activities: todayActivities,
     session: req.session
   });
 });
 
-// ==================== ADMIN ROUTES ====================
 // Admin Login Page
 app.get('/admin/login', (req, res) => {
   if (req.session.user) {
@@ -212,8 +276,6 @@ app.get('/admin', isAuthenticated, (req, res) => {
     activities, 
     departments, 
     participants,
-    announcements,
-    scheduleItems,
     user: req.session.user
   });
 });
@@ -254,236 +316,8 @@ app.get('/admin/reports', isAuthenticated, (req, res) => {
 app.get('/admin/settings', isAuthenticated, (req, res) => {
   res.render('admin/settings', { 
     title: 'Settings - Admin Panel',
-    user: req.session.user,
-    settings: settings
-  });
-});
-
-// ==================== SCHEDULE MANAGEMENT ROUTES ====================
-app.get('/admin/schedule', isAuthenticated, (req, res) => {
-  res.render('admin/schedule', { 
-    title: 'Manage Schedule - Admin Panel',
-    scheduleItems,
     user: req.session.user
   });
-});
-
-app.get('/admin/schedule/add', isAuthenticated, (req, res) => {
-  res.render('admin/schedule-form', { 
-    title: 'Add Schedule Item - Admin Panel',
-    scheduleItem: null,
-    user: req.session.user
-  });
-});
-
-app.get('/admin/schedule/edit/:id', isAuthenticated, (req, res) => {
-  const scheduleItem = scheduleItems.find(s => s.id === parseInt(req.params.id));
-  res.render('admin/schedule-form', { 
-    title: 'Edit Schedule Item - Admin Panel',
-    scheduleItem,
-    user: req.session.user
-  });
-});
-
-app.post('/admin/schedule/save', isAuthenticated, (req, res) => {
-  const { id, time, title, meta } = req.body;
-  
-  if (id) {
-    const index = scheduleItems.findIndex(s => s.id === parseInt(id));
-    if (index !== -1) {
-      scheduleItems[index] = {
-        ...scheduleItems[index],
-        time,
-        title,
-        meta: meta || ''
-      };
-    }
-  } else {
-    const newScheduleItem = {
-      id: scheduleItems.length + 1,
-      time,
-      title,
-      meta: meta || ''
-    };
-    scheduleItems.push(newScheduleItem);
-  }
-  
-  res.redirect('/admin/schedule');
-});
-
-app.post('/admin/schedule/delete/:id', isAuthenticated, (req, res) => {
-  const index = scheduleItems.findIndex(s => s.id === parseInt(req.params.id));
-  if (index !== -1) {
-    scheduleItems.splice(index, 1);
-  }
-  res.redirect('/admin/schedule');
-});
-
-// ==================== ANNOUNCEMENT MANAGEMENT ROUTES ====================
-app.get('/admin/announcements', isAuthenticated, (req, res) => {
-  res.render('admin/announcements', { 
-    title: 'Manage Announcements - Admin Panel',
-    announcements,
-    user: req.session.user
-  });
-});
-
-app.get('/admin/announcement/add', isAuthenticated, (req, res) => {
-  res.render('admin/announcement-form', { 
-    title: 'Add Announcement - Admin Panel',
-    announcement: null,
-    user: req.session.user
-  });
-});
-
-app.get('/admin/announcement/edit/:id', isAuthenticated, (req, res) => {
-  const announcement = announcements.find(a => a.id === parseInt(req.params.id));
-  res.render('admin/announcement-form', { 
-    title: 'Edit Announcement - Admin Panel',
-    announcement,
-    user: req.session.user
-  });
-});
-
-app.post('/admin/announcement/save', isAuthenticated, (req, res) => {
-  const { id, title, content, type } = req.body;
-  
-  if (id) {
-    const index = announcements.findIndex(a => a.id === parseInt(id));
-    if (index !== -1) {
-      announcements[index] = {
-        ...announcements[index],
-        title,
-        content,
-        type: type || 'News',
-        date: new Date().toISOString().split('T')[0]
-      };
-    }
-  } else {
-    const newAnnouncement = {
-      id: announcements.length + 1,
-      title,
-      content,
-      type: type || 'News',
-      date: new Date().toISOString().split('T')[0]
-    };
-    announcements.push(newAnnouncement);
-  }
-  
-  res.redirect('/admin/announcements');
-});
-
-app.post('/admin/announcement/delete/:id', isAuthenticated, (req, res) => {
-  const index = announcements.findIndex(a => a.id === parseInt(req.params.id));
-  if (index !== -1) {
-    announcements.splice(index, 1);
-  }
-  res.redirect('/admin/announcements');
-});
-
-// ==================== SETTINGS ROUTES ====================
-app.post('/admin/settings/general', isAuthenticated, (req, res) => {
-  const { districtName, systemName, themeColor } = req.body;
-  if (districtName) settings.districtName = districtName;
-  if (systemName) settings.systemName = systemName;
-  if (themeColor) settings.themeColor = themeColor;
-  res.redirect('/admin/settings');
-});
-
-app.post('/admin/settings/email', isAuthenticated, (req, res) => {
-  const { smtpServer, emailAddress } = req.body;
-  if (smtpServer) settings.emailServer = smtpServer;
-  if (emailAddress) settings.emailAddress = emailAddress;
-  res.redirect('/admin/settings');
-});
-
-app.post('/admin/settings/security', isAuthenticated, (req, res) => {
-  const { twoFactorAuth, sessionTimeout } = req.body;
-  if (twoFactorAuth) settings.twoFactorAuth = twoFactorAuth;
-  if (sessionTimeout) {
-    settings.sessionTimeout = parseInt(sessionTimeout);
-    req.session.cookie.maxAge = parseInt(sessionTimeout) * 60 * 1000;
-  }
-  res.redirect('/admin/settings');
-});
-
-app.post('/admin/settings/profile', isAuthenticated, (req, res) => {
-  const { fullName, email, phone } = req.body;
-  if (fullName) settings.profileName = fullName;
-  if (email) settings.profileEmail = email;
-  if (phone) settings.profilePhone = phone;
-  res.redirect('/admin/settings');
-});
-
-app.post('/admin/settings/backup', isAuthenticated, (req, res) => {
-  const backupData = {
-    activities: activities,
-    departments: departments,
-    participants: participants,
-    announcements: announcements,
-    scheduleItems: scheduleItems,
-    settings: settings,
-    timestamp: new Date().toISOString()
-  };
-  
-  const backupPath = path.join(__dirname, 'backups');
-  if (!fs.existsSync(backupPath)) {
-    fs.mkdirSync(backupPath);
-  }
-  
-  const backupFile = `backup-${Date.now()}.json`;
-  fs.writeFileSync(path.join(backupPath, backupFile), JSON.stringify(backupData, null, 2));
-  res.redirect('/admin/settings');
-});
-
-app.post('/admin/settings/reset', isAuthenticated, (req, res) => {
-  activities = [
-    {
-      id: 1,
-      activityNumber: 'KDA-2026-001',
-      title: 'Community Development Meeting',
-      category: 'Meeting',
-      date: new Date().toISOString().split('T')[0],
-      startTime: '07:00',
-      endTime: '09:00',
-      location: 'Kicukiro District Office',
-      sector: 'Kicukiro',
-      cell: 'Kicukiro Central',
-      coordinator: 'Jean Pierre Habimana',
-      department: 'Community Development',
-      status: 'Completed',
-      priority: 'High',
-      participants: '45',
-      expectedAttendance: 50,
-      actualAttendance: 45,
-      description: 'Monthly community development meeting.',
-      resources: 'Meeting hall, Projectors',
-      budget: '2,500,000 RWF',
-      progress: 100,
-      createdAt: new Date().toISOString().split('T')[0],
-      updatedAt: new Date().toISOString().split('T')[0]
-    }
-  ];
-  
-  departments = [
-    { id: 1, name: 'Administration', head: 'Dr. Jean Paul Rwema', staff: 25 }
-  ];
-  
-  participants = [
-    { id: 1, name: 'Jean Paul Niyonzima', institution: 'Kicukiro Sector', position: 'Sector Executive', phone: '+250 788 123 456', email: 'jp.niyoni@gmail.com', gender: 'Male' }
-  ];
-  
-  announcements = [
-    { id: 1, title: 'Important Notice: Umuganda Day', content: 'All residents are reminded to participate in Umuganda this Saturday.', type: 'Important', date: new Date().toISOString().split('T')[0] }
-  ];
-  
-  scheduleItems = [
-    { id: 1, time: '07:00', title: 'Community Development Meeting', meta: 'Kicukiro District Office | 45 participants' },
-    { id: 2, time: '09:00', title: 'Infrastructure Inspection', meta: 'Various Sites | 12 participants' },
-    { id: 3, time: '11:00', title: 'Community Work - Umuganda', meta: 'Various Locations | 200 participants' }
-  ];
-  
-  res.redirect('/admin/settings');
 });
 
 // ==================== ACTIVITY CRUD ROUTES ====================
@@ -518,7 +352,7 @@ app.get('/admin/activity/view/:id', isAuthenticated, (req, res) => {
 });
 
 app.post('/admin/activity/save', isAuthenticated, (req, res) => {
-  const { id, title, activityNumber, category, department, date, coordinator, startTime, endTime, location, sector, status, priority, expectedAttendance, budget, description, resources, participants } = req.body;
+  const { id, title, activityNumber, category, department, date, coordinator, startTime, endTime, location, sector, status, priority, expectedAttendance, budget, description, resources } = req.body;
   
   if (id) {
     const index = activities.findIndex(a => a.id === parseInt(id));
@@ -527,18 +361,17 @@ app.post('/admin/activity/save', isAuthenticated, (req, res) => {
         ...activities[index],
         title,
         activityNumber,
-        category: category || activities[index].category,
-        department: department || activities[index].department,
+        category,
+        department,
         date,
-        coordinator: coordinator || activities[index].coordinator,
+        coordinator,
         startTime,
         endTime,
         location,
         sector: sector || activities[index].sector,
-        status: status || activities[index].status,
-        priority: priority || activities[index].priority,
+        status,
+        priority,
         expectedAttendance: parseInt(expectedAttendance) || 0,
-        participants: participants || '0',
         budget: budget || activities[index].budget,
         description: description || activities[index].description,
         resources: resources || activities[index].resources,
@@ -550,20 +383,20 @@ app.post('/admin/activity/save', isAuthenticated, (req, res) => {
       id: activities.length + 1,
       activityNumber: activityNumber || `KDA-2026-00${activities.length + 1}`,
       title,
-      category: category || 'Meeting',
-      department: department || '',
+      category,
+      department,
       date,
-      coordinator: coordinator || '',
+      coordinator,
       startTime,
       endTime,
       location,
       sector: sector || '',
       cell: '',
-      status: status || 'Pending',
-      priority: priority || 'Medium',
+      status,
+      priority,
       expectedAttendance: parseInt(expectedAttendance) || 0,
       actualAttendance: 0,
-      participants: participants || '0',
+      participants: 0,
       budget: budget || '0 RWF',
       description: description || '',
       resources: resources || '',
@@ -716,27 +549,10 @@ app.post('/admin/participant/delete/:id', isAuthenticated, (req, res) => {
 // Static files
 app.use(express.static('public'));
 
-// Create backups directory
-if (!fs.existsSync(path.join(__dirname, 'backups'))) {
-  fs.mkdirSync(path.join(__dirname, 'backups'));
-}
-
-console.log('✅ Routes configured');
-
 // Start server
 app.listen(PORT, () => {
   console.log('✅ Kicukiro District Activity Management System');
   console.log(`📍 http://localhost:${PORT}`);
-  console.log(`📋 Activities Page: http://localhost:${PORT}/activities`);
   console.log(`🔐 Admin Panel: http://localhost:${PORT}/admin/login`);
   console.log('📋 System is ready!');
-  console.log('👤 Login: admin / admin123');
 });
-
-// Error handling
-app.use((err, req, res, next) => {
-  console.error('❌ Error:', err.message);
-  res.status(500).send('Something went wrong!');
-});
-
-console.log('🚀 Server starting...');
